@@ -1,3 +1,5 @@
+Write-Host " ----------- SCRIPT PARA ASIGNAR NOMBRE FINAL A FOTOS ----------- " -ForegroundColor Cyan
+
 do {
     # Solicitar la ruta de la carpeta al usuario
     $ruta = Read-Host "Ingresa la ruta de la carpeta con las fotos"
@@ -64,6 +66,12 @@ do {
         }
 
         Write-Host "`n¡Proceso terminado con éxito!" -ForegroundColor Yellow
+    }
+
+    $fix_name = Read-Host "¿Deseas renombrar las fotos a un nombre final específico? (s/N)"
+    if ($fix_name -eq 's' -or $fix_name -eq 'S') {
+        # Llamar al script renombrar-fotos-archivo-final.ps1
+        & "$PSScriptRoot\renombrar-fotos-archivo-final.ps1" -ruta $ruta
     }
     
     Write-Host "--------------------------------------------------"
