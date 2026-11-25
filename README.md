@@ -1,15 +1,55 @@
 # Automatizacion_Foto
 
-Script de PowerShell para Windows que renombra fotografías que fueron descargadas con la aplicación de lightroom a una carpeta utilizando un prefijo personalizado y una numeración secuencial.
+Colección de scripts de PowerShell para Windows que renombra fotografías de manera automática.
 
-## Qué hace el script
+## Scripts disponibles
 
-El script:
+| Script | Para qué sirve |
+|---|---|
+| `renombrar-fotos-camara-a-nombre-final.ps1` | Convierte nombres que comienzan por un número, como `1-foto.jpg`, en nombres numerados con un prefijo. |
+| `renombrar-fotos-archivo-final.ps1` | Cambia solamente el prefijo de nombres que ya tienen formato `texto-número.jpg`, como `Jardin-norte-001.jpg`. |
 
-- Busca archivos con extensión `.jpg`, `.jpeg`, `.png` o `.webp`.
-- Solo procesa imágenes cuyo nombre comienza con un número seguido de un guion, por ejemplo `1-foto.jpg` o `24-foto.png`. Por defecto esta es la nomenclatura a la hora de descargar las fotos en lightroom.
-- Ordena las imágenes por su número original.
-- Las renombra con un prefijo y números con ceros a la izquierda.
+Ambos scripts funcionan directamente sobre los archivos de una carpeta y no crean copias.
+
+## Requisitos
+
+- Windows 10 u Windows 11.
+- PowerShell 5.1 o PowerShell 7.
+- Una carpeta existente con las fotografías.
+- Se recomienda crear una copia de seguridad antes de renombrar fotografías importantes.
+
+## Descargar el proyecto
+
+1. Abre el repositorio en GitHub.
+2. Haz clic en **Code**.
+3. Selecciona **Download ZIP**.
+4. Extrae el archivo ZIP en una ubicación de tu equipo.
+
+## Ejecutar un script
+
+Haz clic derecho sobre la carpeta donde estén los scripts y selecciona **Abrir en Terminal** o **Abrir ventana de PowerShell aquí**.
+
+Si Windows bloquea los scripts descargados, puedes permitirlos temporalmente en la sesión actual:
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
+
+Esta configuración solo afecta a la terminal actual y se revierte al cerrarla.
+
+---
+
+# Script 1: renombrar fotos de cámara
+
+Archivo:
+
+```text
+renombrar-fotos-camara-a-nombre-final.ps1
+```
+
+## Qué hace
+
+Busca imágenes `.jpg`, `.jpeg`, `.png` o `.webp` cuyos nombres comiencen con un número y un guion. Esta nomenclatura del nombre es la que te genera Lightroom.
 
 Ejemplo:
 
@@ -25,161 +65,184 @@ Jardin-norte-002.jpg
 Jardin-norte-003.jpg
 ```
 
-## Requisitos
+## Uso
 
-- Windows 10 u Windows 11.
-- PowerShell 5.1 o PowerShell 7.
-- Los nombres originales deben comenzar con un número y un guion.
-- Se recomienda hacer una copia de seguridad de las fotografías antes de ejecutar el script.
-
-## Descargar el proyecto
-
-1. Abre el repositorio en GitHub.
-2. Haz clic en **Code**.
-3. Selecciona **Download ZIP**.
-4. Extrae el archivo ZIP en una carpeta de tu equipo, por ejemplo:
-
-```text
-C:\Users\TuUsuario\Fotos
-```
-
-El script estará dentro de la carpeta extraída con el nombre `renombrar-fotos-camara-a-nombre-final.ps1`.
-
-## Ejecutar el script
-
-### Método recomendado
-
-1. Coloca las fotografías que deseas renombrar en una carpeta.
-2. Haz clic derecho en el Explorador de archivos sobre el fondo de la carpeta donde está el script.
-3. Selecciona **Abrir en Terminal** o **Abrir ventana de PowerShell aquí**.
-4. Ejecuta:
+Ejecuta:
 
 ```powershell
 .\renombrar-fotos-camara-a-nombre-final.ps1
 ```
 
-Si Windows bloquea la ejecución de scripts descargados, abre PowerShell como usuario normal y ejecuta primero:
+El script solicitará:
 
-```powershell
-Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+1. **Ruta de la carpeta:** puede introducirse sin comillas o entre comillas.
+2. **Prefijo:** presiona Enter para usar el nombre limpio de la carpeta.
+3. **Número inicial:** presiona Enter para comenzar desde `1`.
+4. **Cantidad de dígitos:** presiona Enter para usar `3` si existen menos de 80 imágenes.
+
+Si hay 80 imágenes o más, el script usa automáticamente tres dígitos. Lo máximo que se comparten como imagenenes con el mismo nombre son 999, si quieres compartir más de 1,000 fotos se recomienda seccionar por sucesos las fotos. Por ejemplo, carpeta Iglesia, Batucada, etc. 
+
+---
+
+# Script 2: cambiar el prefijo del nombre final
+
+Archivo:
+
+```text
+renombrar-fotos-archivo-final.ps1
 ```
 
-Después ejecuta otra vez:
+## Qué hace
 
-```powershell
-.\renombrar-fotos-camara-a-nombre-final.ps1
+Este script cambia el texto anterior al número final sin modificar el número ni la extensión.
+
+Busca imágenes `.jpg`, `.jpeg` y `.png` que tengan nombres con el formato:
+
+```text
+texto-número.extensión
 ```
-
-Esta configuración solo afecta a la sesión actual de PowerShell y no modifica permanentemente el equipo.
-
-### Otra opción
-
-También puedes iniciar PowerShell y escribir la ruta del script entre comillas:
-
-```powershell
-& "C:\Users\TuUsuario\Fotos\renombrar-fotos-camara-a-nombre-final.ps1"
-```
-
-## Datos solicitados por el script
-
-Al iniciar, el programa solicita los siguientes datos:
-
-### 1. Ruta de la carpeta
-
-Escribe la ruta completa que contiene las fotografías.
 
 Ejemplo:
 
 ```text
-C:\Users\TuUsuario\Pictures\Sesion-fotos
-```
+Antes:
+Jardin-norte-001.jpg
+Jardin-norte-002.jpg
+Jardin-norte-003.jpg
 
-La ruta debe existir antes de continuar.
-
-### 2. Prefijo
-
-Este texto aparecerá al inicio de cada nuevo nombre.
-
-- Si presionas **Enter** sin escribir, se utilizará el nombre de la carpeta.
-- Los números iniciales del nombre de la carpeta se eliminarán.
-- Los espacios se cambiarán por guiones.
-- Si escribes un prefijo manualmente, los espacios se cambiarán por guiones bajos.
-
-Ejemplo con una carpeta llamada `23-Jardin norte`:
-
-```text
-Prefijo predeterminado: Jardin-norte
-Resultado en el nombre de las fotografías: Jardin-norte-001.jpg
-```
-
-### 3. Número inicial
-
-Indica por cuál número debe comenzar la numeración.
-
-- Si presionas **Enter** sin escribir, comenzará desde `1`.
-
-Ejemplo:
-
-```text
-101
-102
-103
-```
-
-### 4. Cantidad de dígitos
-
-Si la carpeta tiene menos de 80 fotografías, el script permite elegir cuántos dígitos tendrá el número.
-
-- Si presionas **Enter** sin escribir, se utilizarán `3` dígitos.
-- `001`, `002` y `003` son ejemplos con tres dígitos.
-- Con `4` dígitos se generaría `0001`, `0002`, etc.
-
-Si hay 80 fotografías o más, el script usa automáticamente tres dígitos.
-
-## Antes de renombrar
-
-Los archivos originales deben seguir el formato:
-
-```text
-<número>-<cualquier texto>.<extensión>
-```
-
-Ejemplos válidos:
-
-```text
-1-foto.jpg
-12-paisaje.png
-23-mi-foto.webp
-```
-
-Archivos que no sean fotografías o cuyos nombres no comiencen con un número seguido de un guion no serán modificados.
-
-El script conserva la extensión original de cada archivo.
-
-## Resultado esperado
-
-Por ejemplo, con estas imágenes:
-
-```text
-10-playa.jpg
-2-playa.jpg
-21-playa.jpg
-```
-
-Se ordenarán numéricamente y pueden convertirse en:
-
-```text
+Después:
 Playa-001.jpg
 Playa-002.jpg
 Playa-003.jpg
 ```
 
-Cada vez que finaliza un archivo, el script muestra el cambio realizado en la terminal.
+## Uso
+
+Ejecuta:
+
+```powershell
+.\renombrar-fotos-archivo-final.ps1
+```
+
+Aparecerá un encabezado y el script solicitará dos datos.
+
+### 1. Ruta de la carpeta
+
+Escribe la ruta completa de la carpeta que contiene las fotografías:
+
+```text
+C:\Users\usuario\Pictures\Mis fotos
+```
+
+También puedes escribirla entre comillas:
+
+```text
+"C:\Users\usuario\Pictures\Mis fotos"
+```
+
+El script:
+
+- Elimina las comillas exteriores si las incluiste.
+- Expande variables de entorno de Windows como `%USERPROFILE%`.
+- Comprueba que la ruta exista y sea una carpeta.
+- Muestra un mensaje cuando la ruta está vacía o no es válida.
+
+Ejemplo con una variable de entorno:
+
+```text
+%USERPROFILE%\Pictures\Mis fotos
+```
+
+### 2. Texto nuevo
+
+Introduce el texto que reemplazará al prefijo detectado:
+
+```text
+Playa verano
+```
+
+Los espacios se reemplazan por guiones bajos:
+
+```text
+Playa_verano-001.jpg
+```
+
+El texto no puede estar vacío.
+
+## Qué nombres procesa
+
+Ejemplos compatibles:
+
+```text
+Jardin-norte-001.jpg
+Playa_verano-12.jpeg
+Producto azul-4.png
+```
+
+Ejemplos no compatibles:
+
+```text
+001-foto.jpg
+foto.jpg
+foto-final-a.jpg
+```
+
+El script conserva el número y la extensión originales.
+
+## Resultados
+
+Durante la ejecución se muestra:
+
+- El prefijo que detectó.
+- El nombre de cada archivo renombrado.
+- Los archivos que no pudo renombrar por un conflicto.
+- Un mensaje final indicando que el proceso terminó.
+
+Si el número de una imagen ya existe con el nuevo prefijo, el script no reemplaza el archivo existente. Ejemplo:
+
+```text
+No se renombró 'Jardin-norte-001.jpg': ya existe 'Playa-001.jpg'.
+```
+
+Si el nombre nuevo coincide exactamente con el nombre antiguo, el archivo se omite sin modificarlo.
+
+## Ejemplo completo
+
+Con una carpeta que contiene:
+
+```text
+Jardin-norte-001.jpg
+Jardin-norte-002.jpg
+Jardin-norte-003.png
+```
+
+Ingresa:
+
+```text
+Ruta: C:\Fotos\Sesion
+Texto nuevo: Playa verano
+```
+
+El resultado será:
+
+```text
+Playa_verano-001.jpg
+Playa_verano-002.jpg
+Playa_verano-003.png
+```
+
+## Limitaciones
+
+- Solo procesa `.jpg`, `.jpeg` y `.png`.
+- No procesa subcarpetas.
+- Solo modifica el prefijo detectado primero.
+- No crea copias de las imágenes.
+- No permite deshacer los cambios.
+- No reemplaza archivos cuyo nombre de destino ya existe.
 
 ## Precauciones
 
-- Realiza una copia antes de procesar fotografías importantes.
-- Evita ejecutar el script dentro de una carpeta que ya contenga nombres finales como `Jardin-norte-001.jpg`, porque las fotografías podrían dejar de cumplir el patrón de origen y no procesarse.
-- Si dos archivos generan el mismo nombre, Windows puede rechazar o alterar el cambio. Usa prefijos y números iniciales que no coincidan con nombres existentes.
-- El script modifica los nombres directamente; no crea copias y no incluye una función para deshacer el cambio.
-- No incluye subcarpetas: solo procesa los archivos directamente dentro de la carpeta indicada.
+- Haz una copia de las fotografías antes de ejecutar cualquier script.
+- Comprueba que los nombres tengan el formato esperado.
+- Comprueba la carpeta antes de continuar si contiene archivos con nombres similares.
+- Revisa los resultados después de ejecutar el script.
